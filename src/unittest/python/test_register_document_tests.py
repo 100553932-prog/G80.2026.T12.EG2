@@ -1,4 +1,4 @@
-import unittest
+﻿import unittest
 
 from uc3m_consulting import EnterpriseManager
 from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
@@ -27,3 +27,7 @@ class TestRegisterDocument(unittest.TestCase):
     def test_missing_filename_raises(self):
         with self.assertRaises(EnterpriseManagementException):
             EnterpriseManager.register_document("src/unittest/resources/missing_filename.json")
+
+    def test_invalid_project_id_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_document("src/unittest/resources/invalid_project_id.json")
