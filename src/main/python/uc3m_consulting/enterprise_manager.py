@@ -37,6 +37,10 @@ class EnterpriseManager:
         except ValueError as exc:
             raise EnterpriseManagementException("Invalid date") from exc
 
+        today = datetime.now(timezone.utc).date()
+        if dt < today or dt.year < 2025 or dt.year > 2027:
+            raise EnterpriseManagementException("Invalid date")
+
         project = EnterpriseProject.create(
             company_cif=company_cif,
             project_acronym=project_acronym,
