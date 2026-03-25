@@ -97,8 +97,11 @@ class EnterpriseManager:
         if not path.exists():
             raise EnterpriseManagementException("Input file not found")
 
-        with open(input_file, "r", encoding="utf-8") as file:
-            payload = json.load(file)
+        try:
+            with open(input_file, "r", encoding="utf-8") as file:
+                payload = json.load(file)
+        except json.JSONDecodeError as exc:
+            raise EnterpriseManagementException("Input file is not JSON") from exc
 
         from uc3m_consulting.project_document import ProjectDocument
 
