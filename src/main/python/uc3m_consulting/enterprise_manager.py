@@ -93,6 +93,10 @@ class EnterpriseManager:
 
     @classmethod
     def register_document(cls, input_file: str) -> str:
+        path = Path(input_file)
+        if not path.exists():
+            raise EnterpriseManagementException("Input file not found")
+
         with open(input_file, "r", encoding="utf-8") as file:
             payload = json.load(file)
 
