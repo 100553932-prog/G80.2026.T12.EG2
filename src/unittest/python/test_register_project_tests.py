@@ -33,6 +33,17 @@ class MyTestCase(unittest.TestCase):
                 budget=50000.00,
             )
 
+    def test_invalid_acronym_chars_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_project(
+                company_cif="B12345674",
+                project_acronym="PRJ_01",
+                project_description="Proyecto Demo",
+                department="HR",
+                date=_future_date_str(1),
+                budget=50000.00,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
