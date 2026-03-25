@@ -19,3 +19,7 @@ class TestRegisterDocument(unittest.TestCase):
     def test_input_file_not_json_raises(self):
         with self.assertRaises(EnterpriseManagementException):
             EnterpriseManager.register_document("src/unittest/resources/not_json.json")
+
+    def test_missing_project_id_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_document("src/unittest/resources/missing_project_id.json")
