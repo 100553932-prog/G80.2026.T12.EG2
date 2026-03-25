@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -105,6 +106,10 @@ class EnterpriseManager:
 
         if "PROJECT_ID" not in payload or "FILENAME" not in payload:
             raise EnterpriseManagementException("Invalid JSON structure")
+
+        project_id = payload["PROJECT_ID"]
+        if not isinstance(project_id, str) or not re.fullmatch(r"^[0-9a-f]{32}$", project_id):
+            raise EnterpriseManagementException("Invalid PROJECT_ID")
 
         from uc3m_consulting.project_document import ProjectDocument
 
