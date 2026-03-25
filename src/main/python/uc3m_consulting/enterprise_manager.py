@@ -31,6 +31,14 @@ class EnterpriseManager:
     def _documents_file(cls) -> Path:
         return cls._data_dir() / "project_documents.json"
 
+    @classmethod
+    def _balances_file(cls) -> Path:
+        return cls._data_dir() / "project_balances.json"
+
+    @classmethod
+    def _flows_file(cls) -> Path:
+        return cls._project_root() / "flows.json"
+
     @staticmethod
     def _read_json_list(path: Path):
         if not path.exists():
@@ -42,6 +50,12 @@ class EnterpriseManager:
     def _write_json_list(path: Path, data):
         with path.open("w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=2)
+
+    @classmethod
+    def _validate_project_id(cls, project_id: str) -> None:
+        import re
+        if not isinstance(project_id, str) or not re.fullmatch(r"^[0-9a-f]{32}$", project_id):
+            raise EnterpriseManagementException("Invalid PROJECT_ID")
 
     @classmethod
     def register_project(
@@ -126,3 +140,42 @@ class EnterpriseManager:
         existing.append(document.to_json())
         cls._write_json_list(cls._documents_file(), existing)
         return document.file_signature
+
+    @classmethod
+    def check_project_budget(cls, project_id: str) -> bool:
+        from decimal import Decimal
+
+        cls._validate_project_id(project_id)
+
+        flows_path = cls._flows_file()
+        if not flows_path.exists():
+            raise EnterpriseManagementException("Internal processing error")
+
+        flows = cls._read_json_list(flows_path)
+
+        balance = Decimal("0.00")
+        found = False
+
+        for entry in flows:
+            if entry.get("PROJECT_ID") != project_id:
+                continue
+            found = True
+            if "inflow" in entry:
+                balance += Decimal(str(entry["inflow"]))
+            elif "outflow" in entry:
+                balance -= Decimal(str(entry["outflow"]))
+
+        if not found:
+            raise EnterpriseManagementException("Project not found")
+
+        record = {
+            "project_id": project_id,
+            "time_stamp": datetime.now(timezone.utc).timestamp(),
+            "balance": f"{balance.quantize(Decimal('0.01'))}",
+        }
+
+        existing = cls._read_json_list(cls._balances_file())
+        existing.append(record)
+        cls._write_json_list(cls._balances_file(), existing)
+
+        return True
