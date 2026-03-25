@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from uc3m_consulting.enterprise_project import EnterpriseProject
 from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
 
@@ -29,6 +31,11 @@ class EnterpriseManager:
 
         if department not in {"HR", "FINANCE", "LEGAL", "LOGISTICS"}:
             raise EnterpriseManagementException("Invalid department")
+
+        try:
+            dt = datetime.strptime(date, "%d/%m/%Y").date()
+        except ValueError as exc:
+            raise EnterpriseManagementException("Invalid date") from exc
 
         project = EnterpriseProject.create(
             company_cif=company_cif,
