@@ -24,6 +24,9 @@ class EnterpriseManager:
         if not isinstance(project_acronym, str) or not project_acronym.isalnum() or not (5 <= len(project_acronym) <= 10):
             raise EnterpriseManagementException("Invalid project_acronym")
 
+        if not isinstance(project_description, str) or not (10 <= len(project_description) <= 30):
+            raise EnterpriseManagementException("Invalid project_description")
+
         project = EnterpriseProject.create(
             company_cif=company_cif,
             project_acronym=project_acronym,
