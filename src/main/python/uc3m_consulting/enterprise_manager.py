@@ -41,6 +41,9 @@ class EnterpriseManager:
         if dt < today or dt.year < 2025 or dt.year > 2027:
             raise EnterpriseManagementException("Invalid date")
 
+        if not isinstance(budget, float) or budget < 50000.0 or budget > 1000000.0:
+            raise EnterpriseManagementException("Invalid budget")
+
         project = EnterpriseProject.create(
             company_cif=company_cif,
             project_acronym=project_acronym,
