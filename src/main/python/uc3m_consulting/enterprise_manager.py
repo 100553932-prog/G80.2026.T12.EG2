@@ -21,7 +21,7 @@ class EnterpriseManager:
         if not cls.validate_cif(company_cif):
             raise EnterpriseManagementException("Invalid company_cif")
 
-        if not isinstance(project_acronym, str) or not (5 <= len(project_acronym) <= 10):
+        if not isinstance(project_acronym, str) or not project_acronym.isalnum() or not (5 <= len(project_acronym) <= 10):
             raise EnterpriseManagementException("Invalid project_acronym")
 
         project = EnterpriseProject.create(
