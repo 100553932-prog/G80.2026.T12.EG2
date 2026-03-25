@@ -55,6 +55,17 @@ class MyTestCase(unittest.TestCase):
                 budget=50000.00,
             )
 
+    def test_invalid_department_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_project(
+                company_cif="B12345674",
+                project_acronym="PRJ01",
+                project_description="Proyecto Demo",
+                department="SALES",
+                date=_future_date_str(1),
+                budget=50000.00,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
