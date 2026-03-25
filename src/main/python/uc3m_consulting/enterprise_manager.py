@@ -27,6 +27,9 @@ class EnterpriseManager:
         if not isinstance(project_description, str) or not (10 <= len(project_description) <= 30):
             raise EnterpriseManagementException("Invalid project_description")
 
+        if department not in {"HR", "FINANCE", "LEGAL", "LOGISTICS"}:
+            raise EnterpriseManagementException("Invalid department")
+
         project = EnterpriseProject.create(
             company_cif=company_cif,
             project_acronym=project_acronym,
