@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from uc3m_consulting.enterprise_manager import EnterpriseManager
 from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
@@ -74,6 +74,18 @@ class MyTestCase(unittest.TestCase):
                 project_description="Proyecto Demo",
                 department="HR",
                 date="2026-01-01",
+                budget=50000.00,
+            )
+
+    def test_past_date_raises(self):
+        past = (datetime.now(timezone.utc).date() - timedelta(days=1)).strftime("%d/%m/%Y")
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_project(
+                company_cif="B12345674",
+                project_acronym="PRJ01",
+                project_description="Proyecto Demo",
+                department="HR",
+                date=past,
                 budget=50000.00,
             )
 
