@@ -1,4 +1,6 @@
+import json
 from datetime import datetime, timezone
+from pathlib import Path
 
 from uc3m_consulting.enterprise_project import EnterpriseProject
 from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
@@ -9,6 +11,32 @@ class EnterpriseManager:
     @staticmethod
     def validate_cif(cif: str) -> bool:
         return cif == "B12345674"
+
+    @staticmethod
+    def _project_root() -> Path:
+        return Path(__file__).resolve().parents[4]
+
+    @classmethod
+    def _data_dir(cls) -> Path:
+        data_dir = cls._project_root() / "data"
+        data_dir.mkdir(parents=True, exist_ok=True)
+        return data_dir
+
+    @classmethod
+    def _corporate_ops_file(cls) -> Path:
+        return cls._data_dir() / "corporate_operations.json"
+
+    @staticmethod
+    def _read_json_list(path: Path):
+        if not path.exists():
+            return []
+        with path.open("r", encoding="utf-8") as file:
+            return json.load(file)
+
+    @staticmethod
+    def _write_json_list(path: Path, data):
+        with path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)
 
     @classmethod
     def register_project(
@@ -44,6 +72,12 @@ class EnterpriseManager:
         if not isinstance(budget, float) or budget < 50000.0 or budget > 1000000.0:
             raise EnterpriseManagementException("Invalid budget")
 
+        existing = cls._read_json_list(cls._corporate_ops_file())
+
+        for item in existing:
+            if item.get("company_cif") == company_cif and item.get("project_description") == project_description:
+                raise EnterpriseManagementException("Duplicate project")
+
         project = EnterpriseProject.create(
             company_cif=company_cif,
             project_acronym=project_acronym,
@@ -53,4 +87,6 @@ class EnterpriseManager:
             project_budget=budget,
         )
 
+        existing.append(project.to_json())
+        cls._write_json_list(cls._corporate_ops_file(), existing)
         return project.project_id
