@@ -1,6 +1,5 @@
 from uc3m_consulting.enterprise_project import EnterpriseProject
-from uc3m_consulting.enterprise_management_exception import \
-    EnterpriseManagementException
+from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
 
 
 class EnterpriseManager:
@@ -11,16 +10,19 @@ class EnterpriseManager:
 
     @classmethod
     def register_project(
-            cls,
-            company_cif: str,
-            project_acronym: str,
-            project_description: str,
-            department: str,
-            date: str,
-            budget: float,
+        cls,
+        company_cif: str,
+        project_acronym: str,
+        project_description: str,
+        department: str,
+        date: str,
+        budget: float,
     ) -> str:
         if not cls.validate_cif(company_cif):
             raise EnterpriseManagementException("Invalid company_cif")
+
+        if not isinstance(project_acronym, str) or not (5 <= len(project_acronym) <= 10):
+            raise EnterpriseManagementException("Invalid project_acronym")
 
         project = EnterpriseProject.create(
             company_cif=company_cif,
@@ -32,6 +34,3 @@ class EnterpriseManager:
         )
 
         return project.project_id
-
-
-s
