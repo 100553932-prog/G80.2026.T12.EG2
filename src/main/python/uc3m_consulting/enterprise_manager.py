@@ -90,3 +90,7 @@ class EnterpriseManager:
         existing.append(project.to_json())
         cls._write_json_list(cls._corporate_ops_file(), existing)
         return project.project_id
+
+    @classmethod
+    def register_document(cls, input_file: str) -> str:
+        pass
