@@ -1,13 +1,27 @@
-"""class for testing the regsiter_order method"""
 import unittest
-from uc3m_consulting import EnterpriseManager
+from datetime import datetime, timedelta
+
+from uc3m_consulting.enterprise_manager import EnterpriseManager
+from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
+
+
+def _future_date_str(days: int) -> str:
+    return (datetime.now() + timedelta(days=days)).strftime("%d/%m/%Y")
+
 
 class MyTestCase(unittest.TestCase):
-    """class for testing the register_order method"""
-    def test_something( self ):
-        """dummy test"""
-        self.assertEqual(True, False)
+
+    def test_invalid_cif_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_project(
+                company_cif="B1234567X",
+                project_acronym="PRJ01",
+                project_description="Proyecto Demo",
+                department="HR",
+                date=_future_date_str(1),
+                budget=50000.00,
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
