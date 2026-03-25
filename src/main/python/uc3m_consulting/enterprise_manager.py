@@ -93,4 +93,14 @@ class EnterpriseManager:
 
     @classmethod
     def register_document(cls, input_file: str) -> str:
-        pass
+        with open(input_file, "r", encoding="utf-8") as file:
+            payload = json.load(file)
+
+        from uc3m_consulting.project_document import ProjectDocument
+
+        document = ProjectDocument.create(
+            project_id=payload["PROJECT_ID"],
+            file_name=payload["FILENAME"],
+        )
+
+        return document.file_signature
