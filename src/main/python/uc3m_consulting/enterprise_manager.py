@@ -103,6 +103,9 @@ class EnterpriseManager:
         except json.JSONDecodeError as exc:
             raise EnterpriseManagementException("Input file is not JSON") from exc
 
+        if "PROJECT_ID" not in payload or "FILENAME" not in payload:
+            raise EnterpriseManagementException("Invalid JSON structure")
+
         from uc3m_consulting.project_document import ProjectDocument
 
         document = ProjectDocument.create(
