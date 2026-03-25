@@ -27,6 +27,10 @@ class EnterpriseManager:
     def _corporate_ops_file(cls) -> Path:
         return cls._data_dir() / "corporate_operations.json"
 
+    @classmethod
+    def _documents_file(cls) -> Path:
+        return cls._data_dir() / "project_documents.json"
+
     @staticmethod
     def _read_json_list(path: Path):
         if not path.exists():
@@ -111,11 +115,14 @@ class EnterpriseManager:
         if not isinstance(project_id, str) or not re.fullmatch(r"^[0-9a-f]{32}$", project_id):
             raise EnterpriseManagementException("Invalid PROJECT_ID")
 
+        filename = payload["FILENAME"]
+        if not isinstance(filename, str) or not re.fullmatch(r"^[A-Za-z0-9]{8}\.(pdf|docx|xlsx)$", filename):
+            raise EnterpriseManagementException("Invalid FILENAME")
+
         from uc3m_consulting.project_document import ProjectDocument
 
-        document = ProjectDocument.create(
-            project_id=payload["PROJECT_ID"],
-            file_name=payload["FILENAME"],
-        )
-
+        document = ProjectDocument.create(project_id=project_id, file_name=filename)
+        existing = cls._read_json_list(cls._documents_file())
+        existing.append(document.to_json())
+        cls._write_json_list(cls._documents_file(), existing)
         return document.file_signature

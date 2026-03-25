@@ -30,3 +30,13 @@ class ProjectDocument:
     def file_signature(self) -> str:
         return hashlib.sha256(self._signature_payload().encode("utf-8")).hexdigest()
 
+    def to_json(self):
+        return {
+            "alg": self.alg,
+            "typ": self.typ,
+            "project_id": self.project_id,
+            "file_name": self.file_name,
+            "register_date": self.register_date,
+            "file_signature": self.file_signature,
+        }
+
