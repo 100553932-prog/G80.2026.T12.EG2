@@ -1,5 +1,3 @@
-"""Module """
-
 @classmethod
 def register_project(
     cls,
@@ -10,4 +8,13 @@ def register_project(
     date: str,
     budget: float,
 ) -> str:
-    pass
+    from uc3m_consulting.enterprise_project import EnterpriseProject
+    project = EnterpriseProject.create(
+        company_cif=company_cif,
+        project_acronym=project_acronym,
+        project_description=project_description,
+        department=department,
+        starting_date=date,
+        project_budget=budget,
+    )
+    return project.project_id
