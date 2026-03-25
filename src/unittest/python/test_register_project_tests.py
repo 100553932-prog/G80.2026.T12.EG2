@@ -66,6 +66,17 @@ class MyTestCase(unittest.TestCase):
                 budget=50000.00,
             )
 
+    def test_invalid_date_format_raises(self):
+        with self.assertRaises(EnterpriseManagementException):
+            EnterpriseManager.register_project(
+                company_cif="B12345674",
+                project_acronym="PRJ01",
+                project_description="Proyecto Demo",
+                department="HR",
+                date="2026-01-01",
+                budget=50000.00,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
