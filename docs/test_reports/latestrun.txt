@@ -1,0 +1,12 @@
+Última ejecución de pruebas
+
+Comandos ejecutados:
+PYTHONPATH=src/main/python python3 -m unittest discover -s src/unittest/python -p "test_*.py" -v
+PYTHONPATH=src/main/python python3 -m pylint --rcfile=pylintrc src/main/python/uc3m_consulting
+
+Resultado:
+- Tests: OK
+- Pylint: 9.35/10
+
+Observaciones:
+Se vaciaron los ficheros JSON de la carpeta data antes de la ejecución final para evitar interferencias por datos persistidos de pruebas anteriores.
