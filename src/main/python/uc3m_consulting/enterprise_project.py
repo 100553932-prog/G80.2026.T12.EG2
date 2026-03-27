@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 
 class EnterpriseProject:
-    """Class representing a transfer request"""
+    """Represent a project registered in the system."""
 
     def __init__(
         self,
@@ -14,6 +14,7 @@ class EnterpriseProject:
         project_budget: float,
         time_stamp: float,
     ):
+        """Build a project entity."""
         self.__company_cif = company_cif
         self.__project_description = project_description
         self.__project_acronym = project_acronym
@@ -32,6 +33,7 @@ class EnterpriseProject:
         starting_date: str,
         project_budget: float,
     ):
+        """Create a project with the current UTC timestamp."""
         return cls(
             company_cif=company_cif,
             project_acronym=project_acronym,
@@ -44,30 +46,37 @@ class EnterpriseProject:
 
     @property
     def company_cif(self):
+        """Return the company CIF."""
         return self.__company_cif
 
     @property
     def project_acronym(self):
+        """Return the project acronym."""
         return self.__project_acronym
 
     @property
     def project_description(self):
+        """Return the project description."""
         return self.__project_description
 
     @property
     def department(self):
+        """Return the department name."""
         return self.__department
 
     @property
     def starting_date(self):
+        """Return the starting date."""
         return self.__starting_date
 
     @property
     def project_budget(self):
+        """Return the project budget."""
         return self.__project_budget
 
     @property
     def time_stamp(self):
+        """Return the creation timestamp."""
         return self.__time_stamp
 
     @staticmethod
@@ -79,6 +88,7 @@ class EnterpriseProject:
         starting_date: str,
         project_budget: float,
     ) -> str:
+        """Build the textual identifier of the project."""
         return (
             f"{company_cif}_{project_acronym}_{project_description}_"
             f"{department}_{starting_date}_{project_budget:.2f}"
@@ -86,6 +96,7 @@ class EnterpriseProject:
 
     @property
     def project_id(self):
+        """Return the computed project identifier."""
         return self.compute_project_id(
             self.company_cif,
             self.project_acronym,
@@ -96,6 +107,7 @@ class EnterpriseProject:
         )
 
     def to_json(self):
+        """Serialize the project as a JSON-compatible dictionary."""
         return {
             "company_cif": self.company_cif,
             "project_acronym": self.project_acronym,
@@ -106,4 +118,3 @@ class EnterpriseProject:
             "time_stamp": self.time_stamp,
             "project_id": self.project_id,
         }
-
